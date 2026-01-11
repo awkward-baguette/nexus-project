@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 import wallRouter from './routes/wallRoutes.js';
 import connectDB from './config/db.js';
+import rateLimiter from './middleware/rateLimiter.js';
 
 // Load .env file
 dotenv.config();
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(express.json());           // enable JSON body parsing
+app.use(rateLimiter);              // add rate limiter
 app.use("/api/wall", wallRouter);  // mount the api routes
 
 // Connect to the MongoDB database
