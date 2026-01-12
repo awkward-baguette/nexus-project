@@ -1,5 +1,6 @@
 
 import Message from '../models/Message.js';
+import { Filter } from 'bad-words';
 
 // GET: fetch all messages and return it in an array
 export async function getAllMessages(_, res) {
@@ -43,9 +44,13 @@ export async function createMessage(req, res) {
             });
         }
 
+        // Filter profanity
+        const filter = new Filter();
+        const filteredContent = filter.clean(content);
+
         // Create a new Message document
         const message = new Message({
-            content: content,
+            content: filteredContent,
         });
 
         // Save the new document to the collection
