@@ -1,7 +1,8 @@
-import axios from "axios";
 import { LoaderIcon } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
+
+import api from "./lib/axios.js";
 
 import Header from "./components/Header.jsx";
 import RateLimitedUI from "./components/RateLimitedUI.jsx";
@@ -11,26 +12,25 @@ import MessageWall from "./components/MessageWall.jsx";
 import { connectSocket, disconnectSocket, listenNewMessages } from "./lib/socket.js";
 
 function App() {
-    // Define some states
-    const [isFormDisplayed, setIsFormDisplayed] = useState(false);  // 'true' if message box is displayed
-    const [isRateLimited, setIsRateLimited] = useState(false);      // 'true' if rate limit is exceeded
-    const [loading, setLoading] = useState(true);                   // 'true' if still waiting for initial message fetch
-    const [messages, setMessages] = useState([]);                   // array containing messages (NOTE: message = { _id, content, createdAt })
+    const [isFormDisplayed, setIsFormDisplayed] = useState(false);
+    const [isRateLimited, setIsRateLimited] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    // array containing messages (NOTE: message = { _id, content, createdAt })
+    const [messages, setMessages] = useState([]);
 
     // Store the socket
     const socketRef = useRef(null);
 
-    // Helps for toggling the message box
     const toggleAddBox = () => setIsFormDisplayed((val) => !val);
 
     // Fetch messages and set up sockets on initial load
     useEffect(() => {
         const fetchMessages = async () => {
             try {
-                // Send a GET request to fetch the messages
-                const res = await axios.get("http://localhost:5001/api/wall");
+                // Send a GET request to fetch all messages
+                const res = await api.get("/wall");
 
-                // Update the states
                 setMessages(res.data);
                 setIsRateLimited(false);
             }
@@ -44,15 +44,15 @@ function App() {
                     toast.error("Failed to load messages");
             }
             finally {
-                // Once loading is complete
                 setLoading(false);
             }
         };
 
-        fetchMessages();                            // fetch all messages
-        connectSocket(socketRef);                   // set up a socket connection
-        listenNewMessages(socketRef, setMessages);  // start listening for new messages
+        fetchMessages();
+        connectSocket(socketRef);
+        listenNewMessages(socketRef, setMessages);
 
+        // Disconnect socket connection while unmounting
         return () => disconnectSocket(socketRef);
     }, []);
 

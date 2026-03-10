@@ -4,14 +4,12 @@ import { Redis } from "@upstash/redis";
 
 import dotenv from "dotenv";
 
-// Load .env file
-dotenv.config();
+dotenv.config();  // load environment variables
 
-// Add rate limiter to allow only 200 requests per minute
+// Allow upto a total of 500 requests per minute
 const rateLimit = new Ratelimit({
     redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(200, "60 s"),
+    limiter: Ratelimit.slidingWindow(500, "60 s"),
 });
 
-// Export rate limiter
 export default rateLimit;
