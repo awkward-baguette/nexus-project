@@ -4,13 +4,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();  // load environment variables
 
-// Connect to the database asynchronously
 export default async function connectDB() {
     try {
-        // Fetch the database URI from environment variables
-        const MONGO_URI = process.env.MONGO_URI;
-
-        // Connect to the database
+        const MONGO_URI = process.env.MONGO_URI;  // fetch from environment variables
         await mongoose.connect(MONGO_URI);
         console.log("MongoDB connected successfully");
     }

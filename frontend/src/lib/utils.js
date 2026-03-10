@@ -1,4 +1,3 @@
-
 // Convert time in ISO format to a more readable format
 export function formatTime(isoString) {
     if (typeof isoString !== "string") return "";

@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 
 dotenv.config();  // load environment variables
 
-// Add a rate limiter to allow only 500 requests per minute
+// Allow upto a total of 500 requests per minute
 const rateLimit = new Ratelimit({
     redis: Redis.fromEnv(),
     limiter: Ratelimit.slidingWindow(500, "60 s"),

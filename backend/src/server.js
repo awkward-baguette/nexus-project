@@ -10,8 +10,8 @@ import { app, server } from './lib/socket.js';
 import rateLimiter from './middleware/rateLimiter.js';
 
 dotenv.config();                        // load environment variables
-const PORT = process.env.PORT || 5001;  // set port number
 const __dirname = path.resolve();       // get current path
+const PORT = process.env.PORT || 5001;
 
 
 
@@ -21,17 +21,15 @@ const __dirname = path.resolve();       // get current path
 // Enable JSON body parsing
 app.use(express.json());
 
-// Resolve CORS error in development
+// Allow CORS requests from local frontend in development
 if (process.env.NODE_ENV === "development") {
     app.use(cors({
         origin: "http://localhost:5173",
     }));
 }
 
-// Add the rate limiter
 app.use(rateLimiter);
 
-// Mount the API routes
 app.use("/api/wall", wallRouter);
 
 // Serve the frontend in production
@@ -47,9 +45,7 @@ if (process.env.NODE_ENV == "production") {
 
 
 
-// Connect to the MongoDB database
 connectDB().then(() => {
-    // Start listening for requests
     server.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
     });

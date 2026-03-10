@@ -1,7 +1,6 @@
 
 import mongoose from 'mongoose';
 
-// Create schema first
 const messageSchema = new mongoose.Schema(
     {
         content: {
@@ -16,7 +15,6 @@ const messageSchema = new mongoose.Schema(
     }
 );
 
-// Create a model off the schema next
 const Message = mongoose.model("Message", messageSchema);
 
 export default Message;

@@ -7,13 +7,13 @@ import api from "../lib/axios";
 const MAX_ROWS = 10;  // for text-area
 
 function MessageForm() {
-    const [content, setContent] = useState("");           // input field content
-    const [submitting, setSubmitting] = useState(false);  // 'true' while submitting
+    const [content, setContent] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
-    const inputRef = useRef(null);  // input field
+    const inputRef = useRef(null);
 
 
-    // Auto-resize textarea
+    // For the text area
     const autoResize = () => {
         const box = inputRef.current;
         if (!box) return;
@@ -29,7 +29,7 @@ function MessageForm() {
     };
 
 
-    // Resize when input content changes
+    // Resize text area when input content changes
     useEffect(() => {
         autoResize();
     }, [content]);
@@ -44,7 +44,6 @@ function MessageForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();  // doesn't reload
 
-        // Don't allow empty messages to be submitted
         if (!content.trim()) {
             toast.error("Can't send an empty message");
             return;
@@ -59,6 +58,7 @@ function MessageForm() {
             // If rate limit exceeded
             if (error?.response?.status === 429)
                 toast.error("Rate limited. Try again later.");
+
             // In case of any other error
             else
                 toast.error("Failed to post message");
